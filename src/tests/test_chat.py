@@ -1,6 +1,6 @@
 from src.chat import Chat
 
-chat_obj = Chat(message="hello", context="you are a helpful assistant", candidates=4, temperature=1)
+chat_obj = Chat(message=" ", context="you are a helpful assistant", candidates=4, temperature=1)
 
 for i in range(3):
     message = input("enter message : ")

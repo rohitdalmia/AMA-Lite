@@ -11,9 +11,10 @@ class Chat:
         self.temperature = temperature
         self.candidates = candidates
         self.response = palm.chat(messages=message, candidate_count=4, context=context, temperature=1)
-        print(self.response.last)
 
     def reply(self, message):
+        if len(message) == 0:
+            raise Exception("message cannot be an empty string, please enter a valid message")
         self.response = self.response.reply(message)
         return self.response.last
 
