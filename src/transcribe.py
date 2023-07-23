@@ -5,7 +5,7 @@ from httpx import HTTPStatusError
 
 
 class Transcribe:
-    def __init__(self, language="en"):
+    def __init__(self, language="auto"):
         self.auth_token = os.getenv(key="SPEECHMATICS_API_KEY")
         self.settings = ConnectionSettings(
                             url="https://asr.api.speechmatics.com/v2",
