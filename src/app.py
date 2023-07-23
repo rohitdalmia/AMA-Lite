@@ -32,7 +32,6 @@ def transcribe():
     file.save(recording_path)
     transcription = transcribeObj.transcribe_from_audio(recording_path)
     print(transcription)
-    clear_dir(upload_dir)
     return jsonify({"text": transcription})
 
 
@@ -58,13 +57,6 @@ def listen(filename):
 @app.errorhandler(400)
 def file_not_found():
     return render_template("400.html"), 400
-
-
-def clear_dir(dir_path):
-    for f in os.listdir(dir_path):
-        if not f.endswith(".bak"):
-            continue
-        os.remove(os.path.join(dir_path, f))
 
 
 app.run(debug=True)
