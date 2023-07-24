@@ -1,14 +1,90 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Audio Transcription Example</title>
-</head>
-<body>
-    <h1>Audio Transcription Example</h1>
-    <textarea id="transcription-box" placeholder="Enter your message here"></textarea>
-    <button id="ask-button">Ask</button>
-    <button id="record-button">Start Recording</button>
-    <audio id="audio-element" controls></audio>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>AMA-Lite</title>
+    
+    <!-- Add Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      
+
+      .background {
+        background-image: url("https://thumbs.gfycat.com/BlankFinishedAmazonparrot.webp");
+        background-position: center;
+        background-size: cover;
+        overflow: hidden;
+      }
+
+      .container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      .card {
+        width: 400px;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .card-title {
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      .card-text {
+        text-align: center;
+      }
+
+      .btn-start {
+        display: block;
+        margin: 20px auto;
+        width: 200px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="background">
+      <div class="container">
+        <div class="card">
+          <div class="card-body">
+            <div class="card-body" id="assistantCard">
+              <h1 class="card-title" id="greeting">AMA-Lite</h1>
+              <h3 class="card-title" id="greeting">Hello there!</h3>
+              <p class="card-text">Speak to ask or type your queries below:</p>
+              <textarea
+                class="form-control mb-3"
+                id="transcript"
+                rows="4"
+                placeholder="Hey there! How may I help you..."
+              ></textarea>
+              <button class="btn btn-secondary btn-start" id="record-Button">
+                Hold to Record
+              </button>
+              <button class="btn btn-primary btn-start" id="ask-Button">
+                Ask assistant
+              </button>
+              <audio id="audio-element" controls></audio>
+              <p id=>AMA-Lite:</p>
+                <p id="responseText"></p>
+              
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/typeit@8.7.1/dist/index.umd.js"></script>
     <script src="{{url_for('static', filename='index.js')}}"></script>
-</body>
+  </body>
 </html>

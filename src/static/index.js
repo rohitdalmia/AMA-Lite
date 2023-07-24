@@ -1,72 +1,62 @@
-document.addEventListener('DOMContentLoaded', function() {
-            const recordButton = document.getElementById('record-button');
-            const transcriptionBox = document.getElementById('transcription-box');
-            const askButton = document.getElementById('ask-button');
-            const audioElement = document.getElementById('audio-element');
+let recognition = new (window.SpeechRecognition ||
+  window.webkitSpeechRecognition ||
+  window.mozSpeechRecognition ||
+  window.msSpeechRecognition)();
+recognition.lang = "en-US";
+recognition.interimResults = false;
+recognition.maxAlternatives = 5;
+recognition.lang = "en-US";
+recognition.interimResults = false;
+recognition.maxAlternatives = 5;
 
-            askButton.addEventListener('click', function() {
-                const message = transcriptionBox.value;
-                const textData = { message: message };
-                fetch('/ask', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(textData)
-                })
-                .then(response => {return response.json()})
-                .then(data => {
-                    const audio = data.audio;
-                    audioElement.src = audio;
-                    audioElement.controls = true;
-                    audioElement.play();
-                })
-            });
+const recordButton = document.getElementById("record-Button");
+const askButton = document.getElementById("ask-Button");
+const audioElement = document.getElementById("audio-element");
+const transcription = document.getElementById("transcript");
 
-            let chunks = [];
-            let mediaRecorder = null;
-            let isRecording = false;
+recordButton.addEventListener("mousedown", function () {
+  transcript.textContent = "";
+  recognition.start();
+});
 
-            navigator.mediaDevices.getUserMedia({ audio: true })
-            .then(stream => {
-                mediaRecorder = new MediaRecorder(stream);
-                mediaRecorder.ondataavailable = function(e) {
-                    chunks.push(e.data);
-                }
+recordButton.addEventListener("mouseup", function () {
+  recognition.stop();
+});
 
-                mediaRecorder.onstop = function(e) {
-                    const audioBlob = new Blob(chunks, { type: 'audio/mp3' });
-                    const formData = new FormData();
-                    formData.append('file', audioBlob, 'audio.mp3');
+//console.log("456");
 
-                    fetch('/transcribe', {
-                        method: 'POST',
-                        body: formData,
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data.text);
-                        transcriptionBox.value = data.text;
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                    });
-                };
-            })
-            .catch(error => {
-                console.error('Error accessing the microphone:', error);
-            });
+recognition.addEventListener("result", function (event) {
+  let last = event.results.length - 1;
+  let text = event.results[last][0].transcript;
 
-            recordButton.addEventListener('click', function() {
-                if (isRecording) {
-                    mediaRecorder.stop();
-                    isRecording = false;
-                    recordButton.innerText = 'Start Recording';
-                } else {
-                    chunks = [];
-                    mediaRecorder.start();
-                    isRecording = true;
-                    recordButton.innerText = 'Stop Recording';
-                }
-            });
-        });
+  let responseText = text;
+  transcription.textContent = responseText;
+});
+
+askButton.addEventListener("click", function () {
+  const message = transcript.value;
+  const textData = { message: message };
+  fetch("/ask", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(textData),
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      document.getElementById("responseText").innerHTML = "";
+      const audio = data.audio;
+      audioElement.src = audio;
+      audioElement.controls = true;
+      audioElement.play();
+      new TypeIt("#responseText", {
+        strings: data.text,
+        speed: 39,
+        waitUntilVisible: false,
+        cursorChar: "▊",
+      }).go();
+    });
+});
